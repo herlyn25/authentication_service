@@ -1,16 +1,32 @@
+postgres:
+  host: "${POSTGRES_HOST}"
+  port: "${POSTGRES_PORT}"
+  database: "${POSTGRES_DB}"
+  username: "${POSTGRES_USER}"
+  password: "${POSTGRES_PASSWORD}"
 server:
   port: 8080
 spring:
   application:
     name: "crediya_authentication"
   devtools:
-    add-properties: false
-  h2:
-    console:
+    restart:
       enabled: true
-      path: "/h2"
-  profiles:
-    include: null
+  r2dbc:
+    url: "r2dbc:postgresql://localhost:5432/crediyahcc"
+    username: "hdj"
+    password: "salsam2323"
+    pool:
+      enabled: true
+      initial-size: 2
+      max-size: 20
+      max-idle-time: 30s
+      validation-query: SELECT 1
+
+  sql:
+    init:
+      mode: "always"
+      schema-locations: "classpath:schema.sql"
 management:
   endpoints:
     web:

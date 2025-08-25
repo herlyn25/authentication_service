@@ -1,0 +1,13 @@
+# Database
+POSTGRES_HOST= # IP Server
+POSTGRES_DB= # name database
+POSTGRES_USER= # user database
+POSTGRES_PASSWORD= #password database
+
+# PgAdmin
+PGADMIN_DEFAULT_EMAIL= #email login
+PGADMIN_DEFAULT_PASSWORD= #password login
+
+# Ports
+POSTGRES_PORT= # port by postgres
+PGADMIN_PORT= #port by pgadmin
