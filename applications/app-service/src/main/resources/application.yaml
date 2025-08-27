@@ -46,3 +46,8 @@ debug: true
 logging:
   level:
     org.springframework.r2dbc.core: DEBUG
+springdoc:
+  swagger-ui:
+    operations-sorter: method
+    tags-sorter: alpha
+    doc-expansion: node
