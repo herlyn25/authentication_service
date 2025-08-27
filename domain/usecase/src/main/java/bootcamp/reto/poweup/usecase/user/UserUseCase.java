@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+
 @RequiredArgsConstructor
 public class UserUseCase {
     private final UserRepository userRepository;
@@ -27,7 +28,7 @@ public class UserUseCase {
                                 })
                 );
     }
-       
+
     public Mono<User> findUserByEmail(String email){
         if (email == null || email.trim().isEmpty()) {
             return Mono.error(new IllegalArgumentException("Email cannot be null or empty"));
@@ -37,9 +38,9 @@ public class UserUseCase {
 
     public Mono<User> findDocumentId(String documentId){
         if (documentId == null) {
-            return Mono.error(new IllegalArgumentException("Document ID cannot be null"));
+            return Mono.error(new IllegalArgumentException("Document is required"));
         }
-        return userRepository.findUserByDocumentId(documentId);
+        return userRepository.findByDocumentId(documentId);
     }
 
     public Flux<User> findUserAll(){

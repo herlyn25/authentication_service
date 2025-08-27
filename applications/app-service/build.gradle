@@ -1,20 +1,28 @@
 apply plugin: 'org.springframework.boot'
 
 dependencies {
-    implementation 'me.paulschwarz:spring-dotenv:4.0.0'
-	implementation project(':reactive-web')
-	implementation 'org.reactivecommons.utils:object-mapper:0.1.0'
-	implementation project(':r2dbc-postgresql')
-	testImplementation 'org.springframework:spring-web'
-	implementation project(':api-rest')
+
+    // Projects
     implementation project(':model')
     implementation project(':usecase')
+    implementation project(':r2dbc-postgresql')
+    implementation project(':api-rest')
+    implementation project(':reactive-web')
 
+    // Dependencies
+    implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+	implementation 'org.reactivecommons.utils:object-mapper:0.1.0'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-    runtimeOnly('org.springframework.boot:spring-boot-devtools')
+    // Test Implementation
+	testImplementation 'org.springframework:spring-web'
     testImplementation 'com.tngtech.archunit:archunit:1.4.1'
     testImplementation 'com.fasterxml.jackson.core:jackson-databind'
+
+
+    //  Development
+    runtimeOnly('org.springframework.boot:spring-boot-devtools')
+
 }
 
 tasks.register('explodedJar', Copy) {

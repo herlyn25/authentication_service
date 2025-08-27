@@ -5,37 +5,57 @@ import bootcamp.reto.poweup.model.user.gateways.UserRepository;
 import bootcamp.reto.poweup.r2dbc.entities.UserEntity;
 import bootcamp.reto.poweup.model.user.exceptions.EmailAlreadyUsedException;
 import bootcamp.reto.poweup.r2dbc.helper.ReactiveAdapterOperations;
+import lombok.extern.slf4j.Slf4j;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Repository
 public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     User, UserEntity, Long, UserReactiveRepository> implements UserRepository {
-
-    public UserReactiveRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper) {
+    private final TransactionalOperator transactionalOperator;
+    public UserReactiveRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper, TransactionalOperator transactionalOperator) {
         super(repository, mapper, entity -> mapper.map(entity,User.class));
+        this.transactionalOperator = transactionalOperator;
     }
 
     @Override
     public Mono<User> saveUser(User user) {
-        return super.save(user);
+        log.info("Iniciando el guardado del usuario Repository active");
+        return super.save(user).as(transactionalOperator::transactional)
+                .doOnNext(userSaved -> log.trace("User created with id: {}", userSaved.getId()))
+                .doOnError(error -> log.error("Error in UserReactiveRepositoryAdapter: {}", error));
     }
 
     @Override
-    public Mono<User> findUserByDocumentId (String id) {
-        return super.repository.findByDocumentId(id);
+    public Mono<User> findByDocumentId (String documentId) {
+        log.debug("findUserByDocumentId {}", documentId);
+        return super.repository.findByDocumentId(documentId)
+                .map(entity -> mapper.map(entity,User.class))
+                .as(transactionalOperator::transactional)
+                .doOnNext(user -> log.trace("User found with id: {}", user.getDocumentId()))
+                .doOnError(error -> log.error("Error in UserReactiveRepositoryAdapter: {}", error));
     }
 
     @Override
     public Mono<User> findUserByEmail(String email) {
         return super.repository.findByEmail(email)
-                .map(entity -> mapper.map(entity,User.class));
+                .map(entity -> mapper.map(entity,User.class))
+                .as(transactionalOperator::transactional)
+                .doOnNext(user -> log.trace("User found with email: {}", user.getEmail()))
+                .doOnError(error -> log.error("Error in UserReactiveRepositoryAdapter: {}", error));
     }
 
     @Override
     public Flux<User> findUsersAll(){
-        return super.findAll();
+
+        return super.findAll()
+                .as(transactionalOperator::transactional)
+                .doOnNext(user -> log.trace("Hay un usuarios en la base de datos", user.getId()))
+                .doOnError(error -> log.error("Error in UserReactiveRepositoryAdapter: {}", error));
     }
 }

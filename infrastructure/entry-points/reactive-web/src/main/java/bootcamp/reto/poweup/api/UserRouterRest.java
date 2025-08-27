@@ -17,6 +17,7 @@ public class UserRouterRest {
     public RouterFunction<ServerResponse> userRouterFunction(UserHandler userHandler) {
         return route(POST("/api/v1/users"), userHandler::listenSaveUser)
                 .andRoute(GET("/api/v1/users"), userHandler::listenFindAllUsers)
-                .and(route(GET("/api/v1/user/{id}"), userHandler::listenFindByDocumentId));
+                .and(route(GET("/api/v1/user/dni/{documentId}"), userHandler::listenFindByDocumentId))
+                .andRoute(GET("/api/v1/users/{email}"), userHandler::listenFindByEmail);
     }
 }

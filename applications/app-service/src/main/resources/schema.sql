@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
   address      TEXT,
   phone        INTEGER,
   email        TEXT,
-  document_id  TEXT,
+  documentId  TEXT,
   base_salary NUMERIC(19,2)
    -- 1:1 con roles
 );
