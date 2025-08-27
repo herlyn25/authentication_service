@@ -2,7 +2,9 @@ package bootcamp.reto.poweup.r2dbc.mapper;
 
 import bootcamp.reto.poweup.model.user.User;
 import bootcamp.reto.poweup.r2dbc.dto.UserDTO;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserMapper {
 
     public User dtoToUser(UserDTO userDTO){
@@ -18,4 +20,5 @@ public class UserMapper {
         user.setBaseSalary(userDTO.baseSalary());
         return user;
     }
+
 }

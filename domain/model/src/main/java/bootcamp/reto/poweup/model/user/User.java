@@ -18,12 +18,12 @@ public class User {
     private String address;
     private Integer phone;
     private String email;
-    private Integer documentId;
+    private String documentId;
     private BigDecimal baseSalary;
     //private Role id_rol;
 
     public User(Long id, String firstname, String lastname, LocalDate birthdate, String address, Integer phone, String email,
-            Integer documentId, BigDecimal baseSalary /*, Role id_rol?*/) {
+            String documentId, BigDecimal baseSalary /*, Role id_rol?*/) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;

@@ -6,6 +6,10 @@ postgres:
   password: "${POSTGRES_PASSWORD}"
 server:
   port: 8080
+  error:
+    include-message: always
+
+
 spring:
   application:
     name: "crediya_authentication"
@@ -38,3 +42,4 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+debug: true

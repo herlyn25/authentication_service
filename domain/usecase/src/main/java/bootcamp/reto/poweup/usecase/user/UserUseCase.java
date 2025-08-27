@@ -1,9 +1,10 @@
 package bootcamp.reto.poweup.usecase.user;
 
-import bootcamp.reto.poweup.model.role.Role;
 import bootcamp.reto.poweup.model.role.gateways.RoleRepository;
 import bootcamp.reto.poweup.model.user.User;
+import bootcamp.reto.poweup.model.user.exceptions.EmailAlreadyUsedException;
 import bootcamp.reto.poweup.model.user.gateways.UserRepository;
+import bootcamp.reto.poweup.model.user.validations.UserDomainValidation;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -13,27 +14,35 @@ public class UserUseCase {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
-    public Mono<User> saveUser(User user){
-        return userRepository.save(user);
-    }
-
-    public Mono<Boolean> existsUserByEmail(String email){
-        return userRepository.existsEmail(email);
-    }
-
-     public Mono<User> findUserById(Long id){
-        return userRepository.findById(id);
+    public Mono<User> save(User user){
+        return UserDomainValidation.validateUser(user)
+                .flatMap(validUser->
+                        userRepository.findUserByEmail(validUser.getEmail())
+                                .hasElement()
+                                .flatMap(exists ->{
+                                    if(exists){
+                                        return Mono.error(new EmailAlreadyUsedException(validUser.getEmail()));
+                                    }
+                                    return userRepository.saveUser(user);
+                                })
+                );
     }
        
     public Mono<User> findUserByEmail(String email){
-        return userRepository.findByEmail(email);
+        if (email == null || email.trim().isEmpty()) {
+            return Mono.error(new IllegalArgumentException("Email cannot be null or empty"));
+        }
+        return userRepository.findUserByEmail(email);
+    }
+
+    public Mono<User> findDocumentId(String documentId){
+        if (documentId == null) {
+            return Mono.error(new IllegalArgumentException("Document ID cannot be null"));
+        }
+        return userRepository.findUserByDocumentId(documentId);
     }
 
     public Flux<User> findUserAll(){
-        return userRepository.findAll();
-    }
-
-    public Mono<Void> deleteUserById(Long id){
-        return userRepository.deleteById(id);
+        return userRepository.findUsersAll();
     }
 }
