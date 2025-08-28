@@ -31,9 +31,10 @@ public class RoleReactiveRepositoryAdapter extends ReactiveAdapterOperations<
                 .doOnError(error -> log.error("Error in RoleReactiveRepositoryAdapter: {}", error));
 
     }
-
+/*
     @Override
     public Mono<Role> findByCode(String code) {
         return super.repository.findByCode(code).map(entity -> mapper.map(entity, Role.class));
-    }}
+    }*/
+}
 

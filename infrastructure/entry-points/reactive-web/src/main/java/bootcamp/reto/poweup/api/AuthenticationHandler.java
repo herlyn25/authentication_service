@@ -47,12 +47,12 @@ public class AuthenticationHandler {
                        .contentType(MediaType.APPLICATION_JSON)
                        .build());
     }
-
+/*
     public Mono<ServerResponse> listenSaveRole(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(Role.class)
                 .flatMap(roleUseCase::saveRole)
                 .flatMap(roleSaved -> ServerResponse.created(URI.create("/api/v1/role"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(roleSaved));
-    }
+    }*/
 }

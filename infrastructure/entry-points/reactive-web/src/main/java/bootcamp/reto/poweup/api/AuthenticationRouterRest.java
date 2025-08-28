@@ -53,9 +53,9 @@ public class AuthenticationRouterRest {
     public RouterFunction<ServerResponse> userRouterFunction(AuthenticationHandler authenticationHandler) {
         return route(POST("/api/v1/users"), authenticationHandler::listenSaveUser);
     }
-
+    /*
     @Bean
     public RouterFunction<ServerResponse> roleRouterFunction(AuthenticationHandler roleHandler) {
         return route(POST("/api/v1/role"), roleHandler::listenSaveRole);
-    }
+    }*/
 }
