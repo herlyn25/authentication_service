@@ -1,63 +1,104 @@
 package bootcamp.reto.poweup.exceptions;
 
-import org.springframework.boot.autoconfigure.web.WebProperties;
-import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
-import org.springframework.boot.web.error.ErrorAttributeOptions;
-import org.springframework.boot.web.reactive.error.ErrorAttributes;
-import org.springframework.context.ApplicationContext;
+import bootcamp.reto.poweup.model.user.exceptions.EmailAlreadyUsedException;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.codec.ServerCodecConfigurer;
-import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
 import java.util.Map;
 
-@Component
-public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
+import bootcamp.reto.poweup.model.user.exceptions.UserValidationException;
+import bootcamp.reto.poweup.r2dbc.exceptions.CustomException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
-    public GlobalExceptionHandler(ErrorAttributes errorAttributes,
-                                  ApplicationContext applicationContext,
-                                  ServerCodecConfigurer serverCodecConfigurer) {
-        super(errorAttributes, new WebProperties.Resources(), applicationContext);
-        this.setMessageWriters(serverCodecConfigurer.getWriters());
-        this.setMessageReaders(serverCodecConfigurer.getReaders());
-}
+import java.time.Instant;
+import java.util.LinkedHashMap;
 
-    @Override
-    protected  RouterFunction<ServerResponse> getRoutingFunction(ErrorAttributes errorAttributes) {
-        return RouterFunctions.route(RequestPredicates.all(), this::renderErrorResponse);
-    }
+@ControllerAdvice
+public class GlobalExceptionHandler {
 
-    private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
-        Map<String, Object> errorProperties = getErrorAttributes(request, ErrorAttributeOptions.defaults());
-        Throwable error = getError(request);
-        HttpStatus status = determineHttpStatus(error);
-
-        // Crear respuesta personalizada
-        Map<String, Object> errorResponse = Map.of(
-                "status", status.value(),
-                "error", status.getReasonPhrase(),
-                "message", determineErrorMessage(error),
-                "timestamp", errorProperties.getOrDefault("timestamp", java.time.Instant.now().toString()),
-                "path", errorProperties.getOrDefault("path", request.path())
+    @ExceptionHandler(UserValidationException.class)
+    public Mono<ResponseEntity<Map<String, Object>>> handleUserValidation(UserValidationException ex) {
+        Map<String, Object> body = createErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Validation Error",
+                ex.getMessage(),
+                ex.getErrors()
         );
-        return ServerResponse.status(status)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(errorResponse));
-    }
-    private HttpStatus determineHttpStatus(Throwable error) {
-        if (error instanceof IllegalArgumentException) {
-            return HttpStatus.BAD_REQUEST;
-        }
-        if (error instanceof RuntimeException) {
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return HttpStatus.BAD_REQUEST;
+        return Mono.just(new ResponseEntity<>(body, HttpStatus.BAD_REQUEST));
     }
 
-    private String determineErrorMessage(Throwable error) {
-        return error.getMessage() != null ? error.getMessage() : "Error interno del servidor";
+    @ExceptionHandler(EmailAlreadyUsedException.class)
+    public Mono<ResponseEntity<Map<String, Object>>> handleEmailAlreadyUsed(EmailAlreadyUsedException ex) {
+        Map<String, Object> body = createErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Email Conflict",
+                ex.getMessage(),
+                null
+        );
+        return Mono.just(new ResponseEntity<>(body, HttpStatus.BAD_REQUEST));
+    }
+
+    @ExceptionHandler(CustomException.class)
+    public Mono<ResponseEntity<Map<String, Object>>> handleCustomException(CustomException ex) {
+        Map<String, Object> body = createErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Resource Not Found",
+                ex.getMessage(),
+                null
+        );
+        return Mono.just(new ResponseEntity<>(body, HttpStatus.NOT_FOUND));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public Mono<ResponseEntity<Map<String, Object>>> handleIllegalArgument(IllegalArgumentException ex) {
+        Map<String, Object> body = createErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Invalid Arguments",
+                ex.getMessage() != null ? ex.getMessage() : "Invalid request parameters",
+                null
+        );
+        return Mono.just(new ResponseEntity<>(body, HttpStatus.BAD_REQUEST));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public Mono<ResponseEntity<Map<String, Object>>> handleRuntimeException(RuntimeException ex) {
+        // Log the error for debugging
+        ex.printStackTrace();
+
+        Map<String, Object> body = createErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error",
+                "An unexpected error occurred",
+                null
+        );
+        return Mono.just(new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public Mono<ResponseEntity<Map<String, Object>>> handleGenericException(Exception ex) {
+        // Log the error for debugging
+        ex.printStackTrace();
+
+        Map<String, Object> body = createErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error",
+                "An unexpected error occurred",
+                null
+        );
+        return Mono.just(new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    private Map<String, Object> createErrorResponse(int status, String error, String message, Object details) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", Instant.now().toString());
+        body.put("status", status);
+        body.put("error", error);
+        body.put("message", message);
+        if (details != null) {
+            body.put("details", details);
+        }
+        return body;
     }
 }

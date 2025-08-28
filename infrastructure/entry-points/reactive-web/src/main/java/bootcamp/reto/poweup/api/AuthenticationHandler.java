@@ -45,7 +45,7 @@ public class AuthenticationHandler {
                 }).flatMap(userUseCase::save)
                 .flatMap(userSaved-> ServerResponse.created(URI.create("/api/v1/users"))
                        .contentType(MediaType.APPLICATION_JSON)
-                       .bodyValue(userSaved));
+                       .build());
     }
 
     public Mono<ServerResponse> listenSaveRole(ServerRequest serverRequest) {

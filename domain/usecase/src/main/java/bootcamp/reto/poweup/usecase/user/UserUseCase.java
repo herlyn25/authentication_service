@@ -27,11 +27,4 @@ public class UserUseCase {
                                 })
                 );
     }
-
-    public Mono<User> findUserByEmail(String email){
-        if (email == null || email.trim().isEmpty()) {
-            return Mono.error(new IllegalArgumentException("Email cannot be null or empty"));
-        }
-        return userRepository.findUserByEmail(email);
-    }
 }

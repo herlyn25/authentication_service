@@ -9,6 +9,14 @@ server:
   port: 8080
   error:
     include-message: always
+    include-binding-errors: always
+    include-stacktrace: never
+    include-exception: false
+
+  logging:
+    level:
+      bootcamp.reto.poweup.exceptions: DEBUG
+      org.springframework.web.reactive: DEBUG
 
 spring:
   application:
@@ -22,10 +30,13 @@ spring:
     password: "salsam2323"
     pool:
       enabled: true
-      initial-size: 2
+      initial-size: 10
       max-size: 20
-      max-idle-time: 30s
+      max-idle-time: 30m
       validation-query: SELECT 1
+      max-acquire-time: 60s
+      max-create-connection-time: 60s
+
 
   sql:
     init:
