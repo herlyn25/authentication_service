@@ -10,6 +10,7 @@ import org.springframework.data.relational.core.mapping.Table;
 public class RoleEntity {
     @Id
     private Long id;
+    private String code;
     private String name;
     private String description;
 }

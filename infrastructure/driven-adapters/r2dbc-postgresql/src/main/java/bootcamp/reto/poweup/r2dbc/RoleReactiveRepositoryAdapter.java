@@ -33,17 +33,7 @@ public class RoleReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     }
 
     @Override
-    public Mono<Role> findById(Long id) {
-        return super.findById(id);
-    }
+    public Mono<Role> findByCode(String code) {
+        return super.repository.findByCode(code).map(entity -> mapper.map(entity, Role.class));
+    }}
 
-    @Override
-    public Flux<Role> findAll() {
-        return super.findAll();
-    }
-
-    @Override
-    public Mono<Void> deleteById(Long id) {
-        return repository.deleteById(id);
-    }
-}
