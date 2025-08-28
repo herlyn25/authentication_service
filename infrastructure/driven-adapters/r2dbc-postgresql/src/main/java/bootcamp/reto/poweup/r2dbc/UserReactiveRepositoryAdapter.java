@@ -32,30 +32,11 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     }
 
     @Override
-    public Mono<User> findByDocumentId (String documentId) {
-        log.debug("findUserByDocumentId {}", documentId);
-        return super.repository.findByDocumentId(documentId)
-                .map(entity -> mapper.map(entity,User.class))
-                .as(transactionalOperator::transactional)
-                .doOnNext(user -> log.trace("User found with id: {}", user.getDocumentId()))
-                .doOnError(error -> log.error("Error in UserReactiveRepositoryAdapter: {}", error));
-    }
-
-    @Override
     public Mono<User> findUserByEmail(String email) {
         return super.repository.findByEmail(email)
                 .map(entity -> mapper.map(entity,User.class))
                 .as(transactionalOperator::transactional)
                 .doOnNext(user -> log.trace("User found with email: {}", user.getEmail()))
-                .doOnError(error -> log.error("Error in UserReactiveRepositoryAdapter: {}", error));
-    }
-
-    @Override
-    public Flux<User> findUsersAll(){
-
-        return super.findAll()
-                .as(transactionalOperator::transactional)
-                .doOnNext(user -> log.trace("Hay un usuarios en la base de datos", user.getId()))
                 .doOnError(error -> log.error("Error in UserReactiveRepositoryAdapter: {}", error));
     }
 }

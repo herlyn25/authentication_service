@@ -1,7 +1,7 @@
 package bootcamp.reto.poweup.api.config;
 
-import bootcamp.reto.poweup.api.UserHandler;
-import bootcamp.reto.poweup.api.UserRouterRest;
+import bootcamp.reto.poweup.api.AuthenticationHandler;
+import bootcamp.reto.poweup.api.AuthenticationRouterRest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-@ContextConfiguration(classes = {UserRouterRest.class, UserHandler.class})
+@ContextConfiguration(classes = {AuthenticationRouterRest.class, AuthenticationHandler.class})
 @WebFluxTest
 @Import({CorsConfig.class, SecurityHeadersConfig.class})
 class ConfigTest {

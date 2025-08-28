@@ -6,7 +6,6 @@ import bootcamp.reto.poweup.model.user.exceptions.EmailAlreadyUsedException;
 import bootcamp.reto.poweup.model.user.gateways.UserRepository;
 import bootcamp.reto.poweup.model.user.validations.UserDomainValidation;
 import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
@@ -34,16 +33,5 @@ public class UserUseCase {
             return Mono.error(new IllegalArgumentException("Email cannot be null or empty"));
         }
         return userRepository.findUserByEmail(email);
-    }
-
-    public Mono<User> findDocumentId(String documentId){
-        if (documentId == null) {
-            return Mono.error(new IllegalArgumentException("Document is required"));
-        }
-        return userRepository.findByDocumentId(documentId);
-    }
-
-    public Flux<User> findUserAll(){
-        return userRepository.findUsersAll();
     }
 }

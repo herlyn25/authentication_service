@@ -1,13 +1,12 @@
 package bootcamp.reto.poweup.api;
 
-import bootcamp.reto.poweup.model.user.User;
+import bootcamp.reto.poweup.model.role.Role;
 import bootcamp.reto.poweup.r2dbc.dto.UserDTO;
 import bootcamp.reto.poweup.r2dbc.mapper.UserMapper;
 import bootcamp.reto.poweup.usecase.role.RoleUseCase;
 import bootcamp.reto.poweup.usecase.user.UserUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -23,11 +22,10 @@ import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 @Component
 @RequiredArgsConstructor
 @Validated
-public class UserHandler {
+public class AuthenticationHandler {
     private final UserUseCase userUseCase;
     private final RoleUseCase roleUseCase;
     private final UserMapper userMapper;
-
 
     public Mono<ServerResponse> listenSaveUser( ServerRequest serverRequest) {
         log.info("Iniciando el guardado del usuario handler");
@@ -50,33 +48,11 @@ public class UserHandler {
                        .bodyValue(userSaved));
     }
 
-    public Mono<ServerResponse> listenFindAllUsers(ServerRequest serverRequest) {
-        return ServerResponse.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(userUseCase.findUserAll(), User.class);
-    }
-
-    public Mono<ServerResponse> listenFindByDocumentId(ServerRequest serverRequest) {
-        String documentId =serverRequest.pathVariable("documentId");
-         return userUseCase.findDocumentId(documentId)
-                 .flatMap(user -> ServerResponse.ok()
-                         .contentType(MediaType.APPLICATION_JSON)
-                         .body(fromValue(user)))
-                 .switchIfEmpty(ServerResponse.status(HttpStatus.NOT_FOUND)
-                         .contentType(MediaType.APPLICATION_JSON)
-                         .bodyValue(String.format("Document Id %s no exists",documentId)));
-
-    }
-
-    public Mono<ServerResponse> listenFindByEmail(ServerRequest serverRequest) {
-        String email =serverRequest.pathVariable("email");
-        return userUseCase.findUserByEmail(email)
-                .flatMap(user -> ServerResponse.ok()
+    public Mono<ServerResponse> listenSaveRole(ServerRequest serverRequest) {
+        return serverRequest.bodyToMono(Role.class)
+                .flatMap(roleUseCase::saveRole)
+                .flatMap(roleSaved -> ServerResponse.created(URI.create("/api/v1/role"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(fromValue(user)))
-                .switchIfEmpty(ServerResponse.status(HttpStatus.NOT_FOUND)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(String.format("Email %s no exists",email)));
-
+                        .bodyValue(roleSaved));
     }
 }
