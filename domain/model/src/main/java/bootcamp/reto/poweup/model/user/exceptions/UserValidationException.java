@@ -12,9 +12,4 @@ public class UserValidationException extends RuntimeException{
         super(String.join(", ", errors));
         this.errors = errors;
     }
-    /*
-    public UserValidationException(String error) {
-        super(error);
-        this.errors = List.of(error);
-    }*/
 }

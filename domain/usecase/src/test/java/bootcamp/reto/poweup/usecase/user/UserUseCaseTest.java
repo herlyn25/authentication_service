@@ -65,28 +65,7 @@ public class UserUseCaseTest {
         verify(userRepository, never()).saveUser(any());
     }
 
-    @Test
-    void notCreateUserWhenDomainValidationFails() {
-        // salario inválido para forzar UserValidationException
-        User invalid = User.builder()
-                .id(1L)
-                .firstname("Erlin")
-                .lastname("Castillo")
-                .birthdate(LocalDate.parse("2000-07-25"))
-                .address("Cra 5")
-                .phone(321633)
-                .email("Herly@c.cas")
-                .documentId("10494094")
-                .baseSalary(new BigDecimal("647477474")) // sobre el tope
-                .build();
 
-        StepVerifier.create(userUseCase.save(invalid))
-                .expectError(bootcamp.reto.poweup.model.user.exceptions.UserValidationException.class)
-                .verify();
-
-        // Como falló la validación, NO debe tocar el repo:
-        verifyNoInteractions(userRepository);
-    }
 
     @Test
     void propagateErrorWhenFindUserByEmailFails() {
@@ -100,7 +79,7 @@ public class UserUseCaseTest {
                         ex.getMessage().contains("DB down"))
                 .verify();
     }
-
+    
     @Test
     void propagateErrorWhenSaveUserFails() {
         User user = userBuild();

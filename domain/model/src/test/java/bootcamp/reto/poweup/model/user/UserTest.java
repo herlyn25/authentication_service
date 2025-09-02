@@ -10,14 +10,18 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserTest {
     @Test
     void user_valid() {
-        User user = new User("Erlin",
-                "Castillo",
-                LocalDate.parse("1988-07-25"),
-                "Carrera 5",
-                350988556,
-                "herly-1988@hotmail.com",
-                "1050",
-                BigDecimal.valueOf(200000));
+        User user = User.builder()
+                .id(1L)
+                .firstname("Erlin")
+                .lastname("Castillo")
+                .birthdate(LocalDate.parse("1988-07-25"))
+                .address("Carrera 5")
+                .phone(350988556)
+                .email("herly-1988@hotmail.com")
+                .documentId("1050")
+                .baseSalary( new BigDecimal("200000"))
+                .build();
+        assertNotNull(user);
         assertEquals("Erlin", user.getFirstname());
         assertEquals("Castillo", user.getLastname());
         assertEquals(LocalDate.parse("1988-07-25"), user.getBirthdate());
@@ -25,7 +29,6 @@ public class UserTest {
         assertEquals(350988556, user.getPhone());
         assertEquals("herly-1988@hotmail.com", user.getEmail());
         assertEquals("1050", user.getDocumentId());
-        assertEquals(BigDecimal.valueOf(200000), user.getBaseSalary());
-
+        assertEquals(new BigDecimal("200000"), user.getBaseSalary());
     }
 }

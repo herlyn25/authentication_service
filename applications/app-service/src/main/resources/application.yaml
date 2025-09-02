@@ -37,7 +37,6 @@ spring:
       max-acquire-time: 60s
       max-create-connection-time: 60s
 
-
   sql:
     init:
       mode: "never"

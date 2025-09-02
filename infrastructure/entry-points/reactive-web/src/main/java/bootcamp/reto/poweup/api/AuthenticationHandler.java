@@ -30,19 +30,8 @@ public class AuthenticationHandler {
     public Mono<ServerResponse> listenSaveUser( ServerRequest serverRequest) {
         log.info("Iniciando el guardado del usuario handler");
         return serverRequest.bodyToMono(UserDTO.class)
-                .map(userDTO-> {
-                    userDTO = new UserDTO(
-                            userDTO.firstname(),
-                            userDTO.lastname(),
-                            userDTO.birthdate(),
-                            userDTO.address(),
-                            userDTO.phone(),
-                            userDTO.email(),
-                            userDTO.documentId(),
-                            userDTO.baseSalary()
-                    );
-                    return userMapper.dtoToUser(userDTO);
-                }).flatMap(userUseCase::save)
+                .map(userMapper::dtoToUser)
+                .flatMap(userUseCase::save)
                 .flatMap(userSaved-> ServerResponse.created(URI.create("/api/v1/users"))
                        .contentType(MediaType.APPLICATION_JSON)
                        .build());

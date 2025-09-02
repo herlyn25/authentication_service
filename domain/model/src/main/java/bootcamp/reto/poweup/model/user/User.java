@@ -25,19 +25,4 @@ public class User {
     private BigDecimal baseSalary;
     //private Role id_rol;
 
-
-    public User(String firstname, String lastname, LocalDate birthdate, String address, Integer phone, String email,
-                String documentId, BigDecimal baseSalary /*, Role id_rol?*/) {
-
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.birthdate = birthdate;
-        this.address = address;
-        this.phone = phone;
-        this.email = email;
-        this.documentId = documentId;
-        this.baseSalary = baseSalary;
-        // this.id_rol = id_rol;
-    }
-
 }
