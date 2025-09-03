@@ -1,6 +1,7 @@
 package bootcamp.reto.poweup.exceptions;
 
 import bootcamp.reto.poweup.model.user.exceptions.EmailAlreadyUsedException;
+import bootcamp.reto.poweup.model.user.exceptions.InvalidCredentials;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
@@ -17,6 +18,17 @@ import java.util.LinkedHashMap;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(InvalidCredentials.class)
+    public Mono<ResponseEntity<Map<String, Object>>> handleJwtValidation(InvalidCredentials ex) {
+        Map<String, Object> body = createErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "problema de credenciales",
+                ex.getMessage(),
+                null
+        );
+        return Mono.just(new ResponseEntity<>(body, HttpStatus.BAD_REQUEST));
+    }
 
     @ExceptionHandler(UserValidationException.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleUserValidation(UserValidationException ex) {

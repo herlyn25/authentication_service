@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @Table(name="users")
 
 public class UserEntity {
-
     @Id
     private Long id;
     @Column("firstname") private String firstname;
@@ -26,5 +25,7 @@ public class UserEntity {
     @Column("email") private String email;
     @Column("documentId") private String documentId;
     @Column("base_salary") private BigDecimal baseSalary;
-    // @Column("id_role") private Long roleId;
+    @Column("password") private String password;
+    //@Column("id_role") private Long roleId;
+
 }

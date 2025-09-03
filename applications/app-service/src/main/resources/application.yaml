@@ -36,11 +36,15 @@ spring:
       validation-query: SELECT 1
       max-acquire-time: 60s
       max-create-connection-time: 60s
-
   sql:
     init:
       mode: "never"
       #schema-locations: "classpath:schema.sql"
+
+jwt:
+  secret: "${JWT_SECRET_KEY}"
+  expiration: "${JWT_EXPIRATION_TIME}"
+
 management:
   endpoints:
     web:

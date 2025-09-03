@@ -1,5 +1,6 @@
 package bootcamp.reto.poweup.api;
 
+import bootcamp.reto.poweup.api.dto.UserDTO;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.parameters.*;
@@ -19,24 +20,24 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class AuthenticationRouterRest {
 
     @Bean
-    @RouterOperations({
+    @RouterOperations(value = {
             @RouterOperation(
                     path = "/api/v1/users",
                     method = RequestMethod.POST,
-                    consumes = { MediaType.APPLICATION_JSON_VALUE },
-                    produces = { MediaType.APPLICATION_JSON_VALUE },
+                    consumes = {MediaType.APPLICATION_JSON_VALUE},
+                    produces = {MediaType.APPLICATION_JSON_VALUE},
                     beanClass = AuthenticationHandler.class,
                     beanMethod = "listenSaveUser",
                     operation = @Operation(
                             operationId = "saveUser",
                             summary = "Crear usuario",
-                            tags = { "Users" },
+                            tags = {"Users"},
                             requestBody = @RequestBody(
                                     required = true,
-                                    description = "Datos del usuario a crear",
+                                    description = "Datos de la solicitud de credito a crear",
                                     content = @Content(
                                             schema = @Schema(
-                                                    implementation = bootcamp.reto.poweup.r2dbc.dto.UserDTO.class // ← cambia al paquete real de tu DTO si es distinto
+                                                    implementation = UserDTO.class // ← cambia al paquete real de tu DTO si es distinto
                                             )
                                     )
                             ),
@@ -51,7 +52,8 @@ public class AuthenticationRouterRest {
                     )
             )})
     public RouterFunction<ServerResponse> userRouterFunction(AuthenticationHandler authenticationHandler) {
-        return route(POST("/api/v1/users"), authenticationHandler::listenSaveUser);
+        return route(POST("/api/v1/users"), authenticationHandler::listenSaveUser)
+                .andRoute(POST("/api/v1/login"),authenticationHandler::listenUserLogin);
     }
     /*
     @Bean

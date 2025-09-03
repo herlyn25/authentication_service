@@ -11,3 +11,7 @@ PGADMIN_DEFAULT_PASSWORD= #password login
 # Ports
 POSTGRES_PORT= # port by postgres
 PGADMIN_PORT= #port by pgadmin
+
+# JWT
+JWT_SECRET_KEY= # Clave secreta
+JWT_EXPIRATION_TIME= # tiempo en milisegundos para vencimiento del tokens po lo regular una hora 36000000

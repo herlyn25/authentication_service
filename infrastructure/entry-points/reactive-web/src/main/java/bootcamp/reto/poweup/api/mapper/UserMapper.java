@@ -1,7 +1,7 @@
-package bootcamp.reto.poweup.r2dbc.mapper;
+package bootcamp.reto.poweup.api.mapper;
 
 import bootcamp.reto.poweup.model.user.User;
-import bootcamp.reto.poweup.r2dbc.dto.UserDTO;
+import bootcamp.reto.poweup.api.dto.UserDTO;
 import org.springframework.stereotype.Component;
 
 @Component

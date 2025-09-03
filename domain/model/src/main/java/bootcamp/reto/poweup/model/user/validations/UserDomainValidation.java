@@ -52,6 +52,11 @@ public class UserDomainValidation {
             errors.add("Base salary cannot exceed 15,000,000");
         }
 
+        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            errors.add("Password is required");
+        }
+
+
         if (!errors.isEmpty()) {
             return Mono.error(new UserValidationException(errors));
         }

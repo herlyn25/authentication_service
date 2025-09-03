@@ -21,8 +21,8 @@ public class User {
     private String address;
     private Integer phone;
     private String email;
+    private String password;
     private String documentId;
     private BigDecimal baseSalary;
     //private Role id_rol;
-
 }

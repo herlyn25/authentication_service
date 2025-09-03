@@ -1,6 +1,8 @@
 package bootcamp.reto.poweup.r2dbc;
 
+import bootcamp.reto.poweup.model.ConstanstsModel;
 import bootcamp.reto.poweup.model.user.User;
+import bootcamp.reto.poweup.model.user.exceptions.InvalidCredentials;
 import bootcamp.reto.poweup.model.user.gateways.UserRepository;
 import bootcamp.reto.poweup.r2dbc.entities.UserEntity;
 import bootcamp.reto.poweup.model.user.exceptions.EmailAlreadyUsedException;
@@ -36,5 +38,11 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
                 .as(transactionalOperator::transactional)
                 .doOnNext(user -> log.trace("User found with email: {}", user.getEmail()))
                 .doOnError(error -> log.error("Error in UserReactiveRepositoryAdapter: {}", error));
+    }
+
+    @Override
+    public Mono<User> authenticateUser(String email, String password) {
+        return super.repository.findByEmailAndPassword(email, password)
+                .switchIfEmpty(Mono.error(new InvalidCredentials(ConstanstsModel.INVALID_CREDENTIALS)));
     }
 }

@@ -1,8 +1,9 @@
 package bootcamp.reto.poweup.api;
 
-import bootcamp.reto.poweup.model.role.Role;
-import bootcamp.reto.poweup.r2dbc.dto.UserDTO;
-import bootcamp.reto.poweup.r2dbc.mapper.UserMapper;
+import bootcamp.reto.poweup.model.user.auth.AuthRequest;
+import bootcamp.reto.poweup.api.dto.UserDTO;
+import bootcamp.reto.poweup.api.mapper.UserMapper;
+import bootcamp.reto.poweup.usecase.auth.AuthUseCase;
 import bootcamp.reto.poweup.usecase.role.RoleUseCase;
 import bootcamp.reto.poweup.usecase.user.UserUseCase;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 public class AuthenticationHandler {
     private final UserUseCase userUseCase;
     private final RoleUseCase roleUseCase;
+    private final AuthUseCase authUseCase;
     private final UserMapper userMapper;
 
     public Mono<ServerResponse> listenSaveUser( ServerRequest serverRequest) {
@@ -35,6 +37,15 @@ public class AuthenticationHandler {
                 .flatMap(userSaved-> ServerResponse.created(URI.create("/api/v1/users"))
                        .contentType(MediaType.APPLICATION_JSON)
                        .build());
+    }
+
+    public Mono<ServerResponse> listenUserLogin( ServerRequest serverRequest) {
+
+        return  serverRequest.bodyToMono(AuthRequest.class)
+                .flatMap(authUseCase::login)
+                .flatMap(tokens-> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(tokens));
     }
 /*
     public Mono<ServerResponse> listenSaveRole(ServerRequest serverRequest) {

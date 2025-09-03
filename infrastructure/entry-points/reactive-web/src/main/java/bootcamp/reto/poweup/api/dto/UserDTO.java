@@ -1,4 +1,4 @@
-package bootcamp.reto.poweup.r2dbc.dto;
+package bootcamp.reto.poweup.api.dto;
 
 
 import jakarta.validation.constraints.*;
@@ -29,7 +29,10 @@ public record UserDTO(
         @NotBlank(message = "Base Salary is required")
         @Min(message = "Base Salary must be at least 0", value = 0)
         @Max(message = "Base Salary must be a maximum of 15000000", value = 15000000)
-        BigDecimal baseSalary
+        BigDecimal baseSalary,
+
+        @NotBlank(message = "Password is required")
+        String password
         /*@JsonAlias({"roleId","rolId"})
         Long roleId*/
 ) {
