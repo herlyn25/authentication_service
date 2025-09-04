@@ -1,6 +1,7 @@
 package bootcamp.reto.poweup.api.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
@@ -32,9 +33,10 @@ public record UserDTO(
         BigDecimal baseSalary,
 
         @NotBlank(message = "Password is required")
-        String password
-        /*@JsonAlias({"roleId","rolId"})
-        Long roleId*/
+        String password,
+
+        @NotNull(message="Role id is required")
+        Long role_id
 ) {
     public UserDTO{
         if(address==null || address.isEmpty()) address="no address";

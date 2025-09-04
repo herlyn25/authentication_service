@@ -26,6 +26,6 @@ public class UserEntity {
     @Column("documentId") private String documentId;
     @Column("base_salary") private BigDecimal baseSalary;
     @Column("password") private String password;
-    //@Column("id_role") private Long roleId;
+    @Column("role_id") private Long role_id;
 
 }

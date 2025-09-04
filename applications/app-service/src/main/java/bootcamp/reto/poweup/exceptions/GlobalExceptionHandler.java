@@ -2,13 +2,12 @@ package bootcamp.reto.poweup.exceptions;
 
 import bootcamp.reto.poweup.model.user.exceptions.EmailAlreadyUsedException;
 import bootcamp.reto.poweup.model.user.exceptions.InvalidCredentials;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 import java.util.Map;
 
 import bootcamp.reto.poweup.model.user.exceptions.UserValidationException;
-import bootcamp.reto.poweup.r2dbc.exceptions.CustomException;
+import bootcamp.reto.poweup.usecase.exception.CustomNoFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -52,8 +51,8 @@ public class GlobalExceptionHandler {
         return Mono.just(new ResponseEntity<>(body, HttpStatus.BAD_REQUEST));
     }
 
-    @ExceptionHandler(CustomException.class)
-    public Mono<ResponseEntity<Map<String, Object>>> handleCustomException(CustomException ex) {
+    @ExceptionHandler(CustomNoFoundException.class)
+    public Mono<ResponseEntity<Map<String, Object>>> handleCustomException(CustomNoFoundException ex) {
         Map<String, Object> body = createErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 "Resource Not Found",

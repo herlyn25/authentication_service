@@ -18,6 +18,7 @@ import reactor.core.publisher.Mono;
 public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     User, UserEntity, Long, UserReactiveRepository> implements UserRepository {
     private final TransactionalOperator transactionalOperator;
+
     public UserReactiveRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper, TransactionalOperator transactionalOperator) {
         super(repository, mapper, entity -> mapper.map(entity,User.class));
         this.transactionalOperator = transactionalOperator;

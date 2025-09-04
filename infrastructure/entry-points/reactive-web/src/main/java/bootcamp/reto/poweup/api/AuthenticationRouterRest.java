@@ -52,12 +52,8 @@ public class AuthenticationRouterRest {
                     )
             )})
     public RouterFunction<ServerResponse> userRouterFunction(AuthenticationHandler authenticationHandler) {
-        return route(POST("/api/v1/users"), authenticationHandler::listenSaveUser)
-                .andRoute(POST("/api/v1/login"),authenticationHandler::listenUserLogin);
+        return route(POST("/api/v1/users"), authenticationHandler::listenSaveUser);
+                //.andRoute(POST("/api/v1/login"),authenticationHandler::listenUserLogin);
     }
-    /*
-    @Bean
-    public RouterFunction<ServerResponse> roleRouterFunction(AuthenticationHandler roleHandler) {
-        return route(POST("/api/v1/role"), roleHandler::listenSaveRole);
-    }*/
+
 }

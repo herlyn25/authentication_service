@@ -56,6 +56,9 @@ public class UserDomainValidation {
             errors.add("Password is required");
         }
 
+        if(user.getRole_id()==null){
+            errors.add("Role ID is required");
+        }
 
         if (!errors.isEmpty()) {
             return Mono.error(new UserValidationException(errors));

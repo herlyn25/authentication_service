@@ -1,4 +1,4 @@
-package bootcamp.reto.poweup.model.user.auth;
+package bootcamp.reto.poweup.genericadapter.domain.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthResponse {
-    private String token;
-    private String tokenType = "Bearer";
+public class JwtTokenInfo {
     private String email;
-    private String role;
-    private Long expiresIn;
+    private String token;
+    private boolean isValid;
+    private boolean isExpired;
 }

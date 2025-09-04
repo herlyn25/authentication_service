@@ -8,12 +8,8 @@ import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 public class RoleUseCase {
-  /* private final RoleRepository roleRepository;
-
-    public Mono<Role> saveRole(Role role){
-        return roleRepository.save(role);
+  private final RoleRepository roleRepository;
+    public Mono<Boolean> findRoleByCode(Long id){
+        return roleRepository.findRoleById(id);
     }
-    public Mono<Role> findRoleByCode(String code){ return roleRepository.findByCode(code);}
-
-*/
 }

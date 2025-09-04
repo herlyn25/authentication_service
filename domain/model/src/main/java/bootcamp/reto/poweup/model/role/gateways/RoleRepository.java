@@ -5,9 +5,5 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface RoleRepository {
-    /*
-    Mono<Role> save(Role role);
-    Mono<Role> findByCode(String code);
-    */
-
+    Mono<Boolean> findRoleById(Long id);
 }

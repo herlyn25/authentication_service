@@ -24,5 +24,5 @@ public class User {
     private String password;
     private String documentId;
     private BigDecimal baseSalary;
-    //private Role id_rol;
+    private Long role_id;
 }

@@ -1,11 +1,9 @@
-package bootcamp.reto.poweup.usecase.auth;
+package bootcamp.reto.poweup.genericadapter.domain.auth;
 
-import bootcamp.reto.poweup.model.ConstanstsModel;
 import bootcamp.reto.poweup.model.user.User;
 import bootcamp.reto.poweup.model.user.auth.AuthRequest;
 import bootcamp.reto.poweup.model.user.auth.AuthResponse;
 import bootcamp.reto.poweup.model.user.auth.JwtTokenInfo;
-import bootcamp.reto.poweup.model.user.exceptions.InvalidCredentials;
 import bootcamp.reto.poweup.model.user.gateways.JwtTokenRepository;
 import bootcamp.reto.poweup.model.user.gateways.UserRepository;
 import bootcamp.reto.poweup.usecase.ConstanstsUUC;

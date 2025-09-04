@@ -1,4 +1,4 @@
-package bootcamp.reto.poweup.r2dbc.jwt;
+package bootcamp.reto.poweup.genericadapter.domain;
 
 import bootcamp.reto.poweup.model.user.auth.JwtTokenInfo;
 import bootcamp.reto.poweup.model.user.gateways.JwtTokenRepository;
@@ -30,7 +30,6 @@ public class JwtAdapter implements JwtTokenRepository {
     private Long jwtExpiration;
 
     private SecretKey getSigningKey() {
-
         return Keys.hmacShaKeyFor(jwtScret.getBytes());
     }
 
