@@ -1,8 +1,10 @@
 package bootcamp.reto.poweup.r2dbc;
 
+import bootcamp.reto.poweup.model.ConstanstsModel;
 import bootcamp.reto.poweup.model.role.Role;
 import bootcamp.reto.poweup.model.role.gateways.RoleRepository;
 import bootcamp.reto.poweup.r2dbc.entities.RoleEntity;
+import bootcamp.reto.poweup.r2dbc.exceptions.CustomNoFoundException;
 import bootcamp.reto.poweup.r2dbc.helper.ReactiveAdapterOperations;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivecommons.utils.ObjectMapper;
@@ -23,7 +25,11 @@ public class RoleReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     public Mono<Boolean> findRoleById(Long id) {
         return super.findById(id)
                 .hasElement()
-                .onErrorReturn(false);
-    }
+                .flatMap(exists -> {
+                    if (!exists) {
+                        return  Mono.error(new CustomNoFoundException(ConstanstsModel.ROLE_NO_EXIST));
+                    }
+                    return Mono.just(true);
+                });
 }
-
+}

@@ -1,7 +1,5 @@
 package bootcamp.reto.poweup.genericadapter;
 
-import bootcamp.reto.poweup.genericadapter.constants.ConstantsDA;
-import bootcamp.reto.poweup.genericadapter.exceptions.ExpiratedTokenException;
 import bootcamp.reto.poweup.model.ConstanstsModel;
 import bootcamp.reto.poweup.model.auth.gateways.JwtTokenRepository;
 import io.jsonwebtoken.Claims;
@@ -51,4 +49,16 @@ public class JwtTokenAdapter implements JwtTokenRepository {
         }).subscribeOn(Schedulers.boundedElastic());
 
     }
+
+    @Override
+    public Mono<Boolean> validateToken(String token) {
+        return Mono.fromCallable(()->{
+            Claims claims = Jwts.parser()
+                            .setSigningKey(jwtScret)
+                            .parseClaimsJws(token)
+                            .getBody();
+            Date expiration = claims.getExpiration();
+                return expiration.after(new Date());
+        }).onErrorReturn(false);
+}
 }

@@ -24,4 +24,7 @@ public class AuthUseCase {
                                 .build()
                         ));
     }
+    public Mono<Boolean> validateToken(String token) {
+        return jwtTokenRepository.validateToken(token);
+    }
 }

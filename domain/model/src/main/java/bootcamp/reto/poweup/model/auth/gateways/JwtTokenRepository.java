@@ -3,5 +3,5 @@ import reactor.core.publisher.Mono;
 
 public interface JwtTokenRepository {
     Mono<String> generateToken(String email, Long roleId);
-
+    Mono<Boolean> validateToken(String token);
 }

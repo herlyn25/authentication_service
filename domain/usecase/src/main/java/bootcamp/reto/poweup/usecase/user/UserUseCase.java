@@ -5,8 +5,6 @@ import bootcamp.reto.poweup.model.user.User;
 import bootcamp.reto.poweup.model.user.exceptions.EmailAlreadyUsedException;
 import bootcamp.reto.poweup.model.user.gateways.UserRepository;
 import bootcamp.reto.poweup.model.user.validations.UserDomainValidation;
-import bootcamp.reto.poweup.usecase.ConstantsUUC;
-import bootcamp.reto.poweup.usecase.exception.CustomNoFoundException;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -29,7 +27,7 @@ public class UserUseCase {
                                             }
                                             return userRepository.saveUser(validUser);
                                         });
-                            }).switchIfEmpty(Mono.error(new CustomNoFoundException(ConstantsUUC.ROLE_NOT_FOUND)));
+                            });
                 });
     }
 }

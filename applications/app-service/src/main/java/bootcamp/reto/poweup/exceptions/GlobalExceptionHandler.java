@@ -1,5 +1,7 @@
 package bootcamp.reto.poweup.exceptions;
 
+import bootcamp.reto.poweup.constants.ConstantsAppsLayer;
+import bootcamp.reto.poweup.model.ConstanstsModel;
 import bootcamp.reto.poweup.model.user.exceptions.EmailAlreadyUsedException;
 import bootcamp.reto.poweup.model.user.exceptions.InvalidCredentials;
 import org.springframework.http.HttpStatus;
@@ -7,7 +9,7 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 
 import bootcamp.reto.poweup.model.user.exceptions.UserValidationException;
-import bootcamp.reto.poweup.usecase.exception.CustomNoFoundException;
+import bootcamp.reto.poweup.r2dbc.exceptions.CustomNoFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,8 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidCredentials.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleJwtValidation(InvalidCredentials ex) {
         Map<String, Object> body = createErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "problema de credenciales",
+                ConstantsAppsLayer.INVALID_CREDENTIALS,
                 ex.getMessage(),
                 null
         );
@@ -32,8 +33,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserValidationException.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleUserValidation(UserValidationException ex) {
         Map<String, Object> body = createErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Validation Error",
+                ConstantsAppsLayer.FIELD_VALIDATION_ERRORS,
                 ex.getMessage(),
                 ex.getErrors()
         );
@@ -43,8 +43,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyUsedException.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleEmailAlreadyUsed(EmailAlreadyUsedException ex) {
         Map<String, Object> body = createErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Email Conflict",
+                ConstantsAppsLayer.EMAIL_CONFLICT,
                 ex.getMessage(),
                 null
         );
@@ -54,8 +53,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomNoFoundException.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleCustomException(CustomNoFoundException ex) {
         Map<String, Object> body = createErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                "Resource Not Found",
+                ConstantsAppsLayer.RESOURCE_NOT_FOUND,
                 ex.getMessage(),
                 null
         );
@@ -65,9 +63,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleIllegalArgument(IllegalArgumentException ex) {
         Map<String, Object> body = createErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
                 "Invalid Arguments",
-                ex.getMessage() != null ? ex.getMessage() : "Invalid request parameters",
+                ex.getMessage() != null ? ex.getMessage() : ConstantsAppsLayer.INVALID_PARAMETERS,
                 null
         );
         return Mono.just(new ResponseEntity<>(body, HttpStatus.BAD_REQUEST));
@@ -75,13 +72,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleRuntimeException(RuntimeException ex) {
-        // Log the error for debugging
-        ex.printStackTrace();
-
         Map<String, Object> body = createErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal Server Error",
-                "An unexpected error occurred",
+                ConstantsAppsLayer.INTERNAL_SERVER_ERROR,
+                ConstantsAppsLayer.AN_UNEXPECTED_ERROR,
                 null
         );
         return Mono.just(new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR));
@@ -89,27 +82,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleGenericException(Exception ex) {
-        // Log the error for debugging
-        ex.printStackTrace();
-
-        Map<String, Object> body = createErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal Server Error",
-                "An unexpected error occurred",
+         Map<String, Object> body = createErrorResponse(
+                ConstantsAppsLayer.INTERNAL_SERVER_ERROR,
+                ConstantsAppsLayer.AN_UNEXPECTED_ERROR,
                 null
         );
         return Mono.just(new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    private Map<String, Object> createErrorResponse(int status, String error, String message, Object details) {
+    private Map<String, Object> createErrorResponse(String error, String message, Object details) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", Instant.now().toString());
-        body.put("status", status);
         body.put("error", error);
         body.put("message", message);
-        if (details != null) {
-            body.put("details", details);
-        }
         return body;
     }
 }

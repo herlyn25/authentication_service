@@ -4,6 +4,7 @@ import java.util.*;
 
 public class ConstanstsModel {
   public static String INVALID_CREDENTIALS = "Invalid Credentials";
+  public static String ROLE_NO_EXIST = "Role Not Found";
     public static final Map<Long, String> ROLES_MAP;
     static {
         Map<Long, String> roles = new HashMap<>();
