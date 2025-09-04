@@ -1,7 +1,7 @@
-package bootcamp.reto.poweup.r2dbc.constants;
+package bootcamp.reto.poweup.genericadapter.constants;
 
 public class ConstantsDA {
     public static String EXPIRED_TOKEN = "Token is expired";
-    public static String NO_EXTRACTED_NAME = "Error extracting email from token";
+    public static Long EXPIRATION_TIME_TOKEN = 86400L;
     public static String NO_FOUND = "Resource not found";
 }

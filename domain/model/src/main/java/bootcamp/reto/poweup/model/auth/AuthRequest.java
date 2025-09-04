@@ -1,4 +1,4 @@
-package bootcamp.reto.poweup.genericadapter.domain.auth;
+package bootcamp.reto.poweup.model.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JwtTokenInfo {
+public class AuthRequest {
     private String email;
-    private String token;
-    private boolean isValid;
-    private boolean isExpired;
+    private String password;
 }

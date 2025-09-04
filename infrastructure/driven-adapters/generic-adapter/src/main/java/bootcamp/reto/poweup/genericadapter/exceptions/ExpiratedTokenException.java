@@ -1,4 +1,4 @@
-package bootcamp.reto.poweup.r2dbc.exceptions;
+package bootcamp.reto.poweup.genericadapter.exceptions;
 
 public class ExpiratedTokenException extends RuntimeException {
 

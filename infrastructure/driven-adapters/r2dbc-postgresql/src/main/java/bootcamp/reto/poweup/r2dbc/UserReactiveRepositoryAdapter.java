@@ -44,6 +44,7 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     @Override
     public Mono<User> authenticateUser(String email, String password) {
         return super.repository.findByEmailAndPassword(email, password)
+                .map(entity -> mapper.map(entity,User.class))
                 .switchIfEmpty(Mono.error(new InvalidCredentials(ConstanstsModel.INVALID_CREDENTIALS)));
     }
 }

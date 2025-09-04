@@ -1,4 +1,4 @@
-package bootcamp.reto.poweup.genericadapter.domain;
+package bootcamp.reto.poweup.model.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthRequest {
+public class AuthResponse {
+    private String token;
+    private String tokenType;
     private String email;
-    private String password;
-    //private String role;
+    private Long expiresIn;
 }
