@@ -59,8 +59,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**")
                         .permitAll()
-                        .pathMatchers("/api/v1/users").hasRole("ADMIN")
-                        .pathMatchers("/api/v1/users").hasRole("ASESOR")
+                        .pathMatchers("/api/v1/users").hasAnyRole("ADMIN","ASESOR")
+                        .pathMatchers("/api/v1/apps").hasRole("CLIENTE")
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth-> oauth
                         .jwt(jwt->jwt
