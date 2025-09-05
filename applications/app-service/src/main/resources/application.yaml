@@ -1,16 +1,50 @@
+postgres:
+  host: "${POSTGRES_HOST}"
+  port: "${POSTGRES_PORT}"
+  database: "${POSTGRES_DB}"
+  username: "${POSTGRES_USER}"
+  password: "${POSTGRES_PASSWORD}"
+
 server:
   port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: never
+    include-exception: false
+
+  logging:
+    level:
+      bootcamp.reto.poweup.exceptions: DEBUG
+      org.springframework.web.reactive: DEBUG
+
 spring:
   application:
     name: "crediya_authentication"
   devtools:
-    add-properties: false
-  h2:
-    console:
+    restart:
       enabled: true
-      path: "/h2"
-  profiles:
-    include: null
+  r2dbc:
+    url: "r2dbc:postgresql://localhost:5432/crediyahcc"
+    username: "hdj"
+    password: "salsam2323"
+    pool:
+      enabled: true
+      initial-size: 10
+      max-size: 20
+      max-idle-time: 30m
+      validation-query: SELECT 1
+      max-acquire-time: 60s
+      max-create-connection-time: 60s
+  sql:
+    init:
+      mode: "never"
+      #schema-locations: "classpath:schema.sql"
+
+jwt:
+  secret: "${JWT_SECRET_KEY}"
+  expiration: "${JWT_EXPIRATION_TIME}"
+
 management:
   endpoints:
     web:
@@ -22,3 +56,12 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+debug: true
+logging:
+  level:
+    org.springframework.r2dbc.core: DEBUG
+springdoc:
+  swagger-ui:
+    operations-sorter: method
+    tags-sorter: alpha
+    doc-expansion: node
