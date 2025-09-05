@@ -1,6 +1,7 @@
 package bootcamp.reto.poweup.api;
 
 import bootcamp.reto.poweup.api.dto.UserDTO;
+import bootcamp.reto.poweup.model.auth.AuthRequest;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.parameters.*;
@@ -50,7 +51,40 @@ public class AuthenticationRouterRest {
                                     @ApiResponse(responseCode = "400", description = "Solicitud inválida")
                             }
                     )
-            )})
+            ),
+            @RouterOperation(
+                    path = "/api/v1/login",
+                    method = RequestMethod.POST,
+                    consumes = {MediaType.APPLICATION_JSON_VALUE},
+                    produces = {MediaType.APPLICATION_JSON_VALUE},
+                    beanClass = AuthenticationHandler.class,
+                    beanMethod = "listenUserLogin",
+                    operation = @Operation(
+                            operationId = "login",
+                            summary = "Hacer Login",
+                            tags = {"Users"},
+                            requestBody = @RequestBody(
+                                    required = true,
+                                    description = "Obtener un tokens para login",
+                                    content = @Content(
+                                            schema = @Schema(
+                                                    implementation = AuthRequest.class // ← cambia al paquete correcto
+                                            )
+                                    )
+                            ),
+                            responses = {
+                                    @ApiResponse(responseCode = "200", description = "Ok",
+                                            content = @Content(
+                                                    schema = @Schema(implementation = bootcamp.reto.poweup.model.auth.AuthRequest.class)
+                                            )
+                                    ),
+                                    @ApiResponse(responseCode = "401", description = "No Authorized"),
+                                    @ApiResponse(responseCode = "403", description = "Forbbiden"),
+
+                            }
+                    )
+            )
+    })
     public RouterFunction<ServerResponse> userRouterFunction(AuthenticationHandler authenticationHandler) {
         return route(POST("/api/v1/users"), authenticationHandler::listenSaveUser)
                .andRoute(POST("/api/v1/login"),authenticationHandler::listenUserLogin);
