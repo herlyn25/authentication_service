@@ -2,6 +2,7 @@ package bootcamp.reto.poweup.usecase.user;
 
 import bootcamp.reto.poweup.model.role.gateways.RoleRepository;
 import bootcamp.reto.poweup.model.user.User;
+import bootcamp.reto.poweup.model.user.UserClient;
 import bootcamp.reto.poweup.model.user.exceptions.EmailAlreadyUsedException;
 import bootcamp.reto.poweup.model.user.gateways.UserRepository;
 import bootcamp.reto.poweup.model.user.validations.UserDomainValidation;
@@ -29,5 +30,9 @@ public class UserUseCase {
                                         });
                             });
                 });
+    }
+
+    public Mono<UserClient> findUserByEmailorDocumentId(String param) {
+        return userRepository.findUserByParam(param);
     }
 }

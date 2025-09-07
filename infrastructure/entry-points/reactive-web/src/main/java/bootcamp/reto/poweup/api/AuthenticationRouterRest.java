@@ -2,6 +2,7 @@ package bootcamp.reto.poweup.api;
 
 import bootcamp.reto.poweup.api.dto.UserDTO;
 import bootcamp.reto.poweup.model.auth.AuthRequest;
+import bootcamp.reto.poweup.model.user.UserClient;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.parameters.*;
@@ -11,8 +12,10 @@ import org.springdoc.core.annotations.*;
 import org.springframework.context.annotation.*;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.server.*;
 
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
@@ -83,11 +86,44 @@ public class AuthenticationRouterRest {
 
                             }
                     )
+            ),
+            @RouterOperation(
+                    path = "/api/v1/users/{param}",
+                    method = RequestMethod.GET,
+                    consumes = {MediaType.APPLICATION_JSON_VALUE},
+                    produces = {MediaType.APPLICATION_JSON_VALUE},
+                    beanClass = AuthenticationHandler.class,
+                    beanMethod = "listenUserByEmailOrDocument",
+                    operation = @Operation(
+                            operationId = "users_by_email_or_document_id",
+                            summary = "Obtener Salario base y nombre del cliente",
+                            tags = {"Users"},
+                            parameters = {
+                                @Parameter(
+                                        name="param",
+                                        description = "Puede ser el email or documentId",
+                                        example = "h@h.com or 10209393",
+                                        schema = @Schema(type = "String", defaultValue = "")
+                                )
+                            }
+                            ,responses = {
+                                    @ApiResponse(responseCode = "200", description = "Ok",
+                                            content = @Content(
+                                                    schema = @Schema(implementation = bootcamp.reto.poweup.model.user.UserClient.class)
+                                            )
+                                    ),
+                                    @ApiResponse(responseCode = "200", description = "OK"),
+                                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                                    @ApiResponse(responseCode = "404", description = "Bad Request"),
+                                    @ApiResponse(responseCode = "403", description = "Forbidden"),
+
+                            }
+                    )
             )
     })
     public RouterFunction<ServerResponse> userRouterFunction(AuthenticationHandler authenticationHandler) {
         return route(POST("/api/v1/users"), authenticationHandler::listenSaveUser)
-               .andRoute(POST("/api/v1/login"),authenticationHandler::listenUserLogin);
+               .andRoute(POST("/api/v1/login"),authenticationHandler::listenUserLogin)
+                .andRoute(GET("/api/v1/users/{param}"),authenticationHandler::listenUserByEmailOrDocument);
     }
-
 }

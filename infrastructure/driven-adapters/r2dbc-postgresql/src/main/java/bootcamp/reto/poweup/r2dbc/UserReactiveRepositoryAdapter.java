@@ -2,6 +2,7 @@ package bootcamp.reto.poweup.r2dbc;
 
 import bootcamp.reto.poweup.model.ConstanstsModel;
 import bootcamp.reto.poweup.model.user.User;
+import bootcamp.reto.poweup.model.user.UserClient;
 import bootcamp.reto.poweup.model.user.exceptions.InvalidCredentials;
 import bootcamp.reto.poweup.model.user.gateways.UserRepository;
 import bootcamp.reto.poweup.r2dbc.entities.UserEntity;
@@ -46,5 +47,12 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         return super.repository.findByEmailAndPassword(email, password)
                 .map(entity -> mapper.map(entity,User.class))
                 .switchIfEmpty(Mono.error(new InvalidCredentials(ConstanstsModel.INVALID_CREDENTIALS)));
+    }
+
+    @Override
+    public Mono<UserClient> findUserByParam(String param) {
+        return super.repository.findByEmailOrDocumentId(param)
+                .map(entity -> mapper.map(entity,UserClient.class))
+                .switchIfEmpty(Mono.error(new InvalidCredentials(ConstanstsModel.USER_NO_FOUND)));
     }
 }

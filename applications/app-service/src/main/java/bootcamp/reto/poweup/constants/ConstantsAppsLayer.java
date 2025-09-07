@@ -1,6 +1,7 @@
 package bootcamp.reto.poweup.constants;
 
 public class ConstantsAppsLayer {
+    public static final String INVALID_REQUEST_BODY = "Invalid request body";
     public static String INVALID_CREDENTIALS = "Invalid credetials";
     public static String FIELD_VALIDATION_ERRORS = "Field validation errors";
     public static String EMAIL_CONFLICT = "Email conflict";

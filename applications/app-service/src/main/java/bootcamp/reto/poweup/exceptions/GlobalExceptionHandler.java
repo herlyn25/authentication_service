@@ -1,10 +1,12 @@
 package bootcamp.reto.poweup.exceptions;
 
 import bootcamp.reto.poweup.constants.ConstantsAppsLayer;
-import bootcamp.reto.poweup.model.ConstanstsModel;
 import bootcamp.reto.poweup.model.user.exceptions.EmailAlreadyUsedException;
 import bootcamp.reto.poweup.model.user.exceptions.InvalidCredentials;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
 import reactor.core.publisher.Mono;
 import java.util.Map;
 
@@ -19,6 +21,26 @@ import java.util.LinkedHashMap;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public Mono<ResponseEntity<Map<String, Object>>> handleBadRequestException(ResponseStatusException ex) {
+        Map<String, Object> body = createErrorResponse(
+                ConstantsAppsLayer.INVALID_REQUEST_BODY,
+                ex.getMessage(),
+                null
+        );
+        return Mono.just(new ResponseEntity<>(body, HttpStatus.BAD_REQUEST));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public Mono<ResponseEntity<Map<String, Object>>> handleBadRequest(HttpMessageNotReadableException ex) {
+        Map<String, Object> body = createErrorResponse(
+                ConstantsAppsLayer.INVALID_REQUEST_BODY,
+                ex.getMessage(),
+                null
+        );
+        return Mono.just(new ResponseEntity<>(body, HttpStatus.BAD_REQUEST));
+    }
 
     @ExceptionHandler(InvalidCredentials.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleJwtValidation(InvalidCredentials ex) {
@@ -82,7 +104,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleGenericException(Exception ex) {
-         Map<String, Object> body = createErrorResponse(
+        Map<String, Object> body = createErrorResponse(
                 ConstantsAppsLayer.INTERNAL_SERVER_ERROR,
                 ConstantsAppsLayer.AN_UNEXPECTED_ERROR,
                 null

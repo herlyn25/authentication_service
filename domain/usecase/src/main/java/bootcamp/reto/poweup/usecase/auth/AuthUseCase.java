@@ -3,6 +3,7 @@ package bootcamp.reto.poweup.usecase.auth;
 import bootcamp.reto.poweup.model.auth.AuthRequest;
 import bootcamp.reto.poweup.model.auth.AuthResponse;
 import bootcamp.reto.poweup.model.auth.gateways.JwtTokenRepository;
+import bootcamp.reto.poweup.model.user.exceptions.InvalidCredentials;
 import bootcamp.reto.poweup.model.user.gateways.UserRepository;
 import bootcamp.reto.poweup.usecase.ConstantsUUC;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class AuthUseCase {
                                 .email(user.getEmail())
                                 .expiresIn(ConstantsUUC.EXPIRATION_TIME_TOKEN)
                                 .build()
-                        ));
+                        )).onErrorResume( e->Mono.error(new InvalidCredentials(ConstantsUUC.NO_CONNECTION)));
     }
     public Mono<Boolean> validateToken(String token) {
         return jwtTokenRepository.validateToken(token);

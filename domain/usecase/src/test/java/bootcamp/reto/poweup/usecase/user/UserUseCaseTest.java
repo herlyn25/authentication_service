@@ -1,6 +1,7 @@
 package bootcamp.reto.poweup.usecase.user;
 
 import bootcamp.reto.poweup.model.user.User;
+import bootcamp.reto.poweup.model.user.UserClient;
 import bootcamp.reto.poweup.model.user.exceptions.EmailAlreadyUsedException;
 import bootcamp.reto.poweup.model.user.gateways.UserRepository;
 import bootcamp.reto.poweup.model.role.gateways.RoleRepository;
@@ -33,9 +34,16 @@ class UserUseCaseTest {
 
     private User validUser;
 
+    private UserClient userClient;
+
     @BeforeEach
     void setUp() {
         userUseCase = new UserUseCase(userRepository, roleRepository);
+
+        userClient = UserClient.builder()
+                .salary(new BigDecimal("125678"))
+                .fullname("John Doe")
+                .build();
 
         validUser = User.builder()
                 .id(1L)
@@ -193,5 +201,46 @@ class UserUseCaseTest {
         inOrder.verify(userRepository).saveUser(validUser);
     }
 
+    @Test
+    void findUserByEmailorDocumentId_WhenUserExists_ShouldReturnUser() {
+        // Given
+        String param = "test@example.com";
+        when(userRepository.findUserByParam(param)).thenReturn(Mono.just(userClient));
+
+        // When & Then
+        StepVerifier.create(userUseCase.findUserByEmailorDocumentId(param))
+                .expectNext(userClient)
+                .verifyComplete();
+
+        verify(userRepository, times(1)).findUserByParam(param);
+    }
+
+    @Test
+    void findUserByEmailorDocumentId_WhenUserNotFound_ShouldReturnEmptyMono() {
+        // Given
+        String param = "nonexistent@example.com";
+        when(userRepository.findUserByParam(param)).thenReturn(Mono.empty());
+
+        // When & Then
+        StepVerifier.create(userUseCase.findUserByEmailorDocumentId(param))
+                .verifyComplete();
+
+        verify(userRepository, times(1)).findUserByParam(param);
+    }
+
+    @Test
+    void findUserByEmailorDocumentId_WhenRepositoryThrowsError_ShouldPropagateError() {
+        // Given
+        String param = "test@example.com";
+        RuntimeException exception = new RuntimeException("Database connection error");
+        when(userRepository.findUserByParam(param)).thenReturn(Mono.error(exception));
+
+        // When & Then
+        StepVerifier.create(userUseCase.findUserByEmailorDocumentId(param))
+                .expectError(RuntimeException.class)
+                .verify();
+
+        verify(userRepository, times(1)).findUserByParam(param);
+    }
 
 }

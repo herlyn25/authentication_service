@@ -44,4 +44,11 @@ public class AuthenticationHandler {
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(tokens));
     }
+    public Mono<ServerResponse> listenUserByEmailOrDocument( ServerRequest serverRequest) {
+        String param = serverRequest.pathVariable("param");
+        return userUseCase.findUserByEmailorDocumentId(param)
+                .flatMap(user->ServerResponse.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(user));
+    }
 }

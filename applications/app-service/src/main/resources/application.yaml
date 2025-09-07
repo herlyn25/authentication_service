@@ -38,8 +38,10 @@ spring:
       max-create-connection-time: 60s
   sql:
     init:
-      mode: "never"
-      #schema-locations: "classpath:schema.sql"
+      mode: "always"
+      schema-locations: "classpath:schema.sql"
+      continue-on-error: false
+      separator: ";"
 
 jwt:
   secret: "${JWT_SECRET_KEY}"

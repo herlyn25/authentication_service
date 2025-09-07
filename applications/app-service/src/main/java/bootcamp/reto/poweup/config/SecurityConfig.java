@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
@@ -60,7 +61,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**")
                         .permitAll()
                         .pathMatchers("/api/v1/users").hasAnyRole("ADMIN","ASESOR")
-                        .pathMatchers("/api/v1/apps").hasRole("CLIENTE")
+                        .pathMatchers(HttpMethod.POST,"/api/v1/apps").hasRole("CLIENTE")
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth-> oauth
                         .jwt(jwt->jwt
