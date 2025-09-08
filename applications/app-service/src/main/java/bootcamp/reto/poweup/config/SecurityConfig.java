@@ -54,13 +54,16 @@ public class SecurityConfig {
     SecurityWebFilterChain springSecurityPermissions(ServerHttpSecurity http, ReactiveJwtDecoder decoder) {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authorizeExchange(ex-> ex
+                .authorizeExchange(ex->ex
                         .pathMatchers(
-                                "/api/v1/login",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**")
+                        "/api/v1/login",
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**"/*,
+                       "/api/v1/users/**",
+                                "/api/v1/apps"*/)
                         .permitAll()
-                        .pathMatchers("/api/v1/users").hasAnyRole("ADMIN","ASESOR")
+                        .pathMatchers(HttpMethod.POST,"/api/v1/users").hasAnyRole("ADMIN","ASESOR")
+                        .pathMatchers(HttpMethod.GET,"/api/v1/users").hasRole("ASESOR")
                         .pathMatchers(HttpMethod.POST,"/api/v1/apps").hasRole("CLIENTE")
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth-> oauth

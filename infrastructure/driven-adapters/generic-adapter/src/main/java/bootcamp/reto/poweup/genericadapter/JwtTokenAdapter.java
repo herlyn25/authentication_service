@@ -4,6 +4,7 @@ import bootcamp.reto.poweup.model.ConstanstsModel;
 import bootcamp.reto.poweup.model.auth.gateways.JwtTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -25,7 +27,8 @@ public class JwtTokenAdapter implements JwtTokenRepository {
     private Long jwtExpiration;
 
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtScret.getBytes(StandardCharsets.UTF_8));
+
+        return new SecretKeySpec(jwtScret.getBytes(StandardCharsets.UTF_8),"HmacSHA256");
     }
 
     @Override
@@ -44,7 +47,7 @@ public class JwtTokenAdapter implements JwtTokenRepository {
                     .setSubject(email)
                     .setIssuedAt(new Date(System.currentTimeMillis()))
                     .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                    .signWith(getSigningKey())
+                    .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                     .compact();
         }).subscribeOn(Schedulers.boundedElastic());
 

@@ -1,9 +1,9 @@
 postgres:
-  host: "${POSTGRES_HOST}"
-  port: "${POSTGRES_PORT}"
-  database: "${POSTGRES_DB}"
-  username: "${POSTGRES_USER}"
-  password: "${POSTGRES_PASSWORD}"
+  host: localhost
+  port: 5432
+  database: "crediyahcc"
+  username: "hdj"
+  password: "salsam2323"
 
 server:
   port: 8080
@@ -17,6 +17,7 @@ server:
     level:
       bootcamp.reto.poweup.exceptions: DEBUG
       org.springframework.web.reactive: DEBUG
+      org.springframework.security: DEBUG
 
 spring:
   application:
@@ -44,8 +45,8 @@ spring:
       separator: ";"
 
 jwt:
-  secret: "${JWT_SECRET_KEY}"
-  expiration: "${JWT_EXPIRATION_TIME}"
+  secret: "$mySecretKeyForJWT2024VeryLongAndSecureKey123456789"
+  expiration: 3600000
 
 management:
   endpoints:

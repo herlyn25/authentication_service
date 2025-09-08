@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidCredentials.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleJwtValidation(InvalidCredentials ex) {
         Map<String, Object> body = createErrorResponse(
-                ConstantsAppsLayer.INVALID_CREDENTIALS,
+                ConstantsAppsLayer.INVALID_DATA,
                 ex.getMessage(),
                 null
         );
@@ -85,7 +85,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleIllegalArgument(IllegalArgumentException ex) {
         Map<String, Object> body = createErrorResponse(
-                "Invalid Arguments",
+                ConstantsAppsLayer.INVALID_ARGUMENT,
                 ex.getMessage() != null ? ex.getMessage() : ConstantsAppsLayer.INVALID_PARAMETERS,
                 null
         );
@@ -114,9 +114,9 @@ public class GlobalExceptionHandler {
 
     private Map<String, Object> createErrorResponse(String error, String message, Object details) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", Instant.now().toString());
-        body.put("error", error);
-        body.put("message", message);
+        body.put(ConstantsAppsLayer.TIMESTAMP, Instant.now().toString());
+        body.put(ConstantsAppsLayer.ERROR, error);
+        body.put(ConstantsAppsLayer.MESSAGE, message);
         return body;
     }
 }

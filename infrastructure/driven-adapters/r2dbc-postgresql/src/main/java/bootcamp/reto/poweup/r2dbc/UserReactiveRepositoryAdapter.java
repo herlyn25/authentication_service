@@ -7,6 +7,7 @@ import bootcamp.reto.poweup.model.user.exceptions.InvalidCredentials;
 import bootcamp.reto.poweup.model.user.gateways.UserRepository;
 import bootcamp.reto.poweup.r2dbc.entities.UserEntity;
 import bootcamp.reto.poweup.model.user.exceptions.EmailAlreadyUsedException;
+import bootcamp.reto.poweup.r2dbc.exceptions.CustomNoFoundException;
 import bootcamp.reto.poweup.r2dbc.helper.ReactiveAdapterOperations;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivecommons.utils.ObjectMapper;
@@ -53,6 +54,6 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     public Mono<UserClient> findUserByParam(String param) {
         return super.repository.findByEmailOrDocumentId(param)
                 .map(entity -> mapper.map(entity,UserClient.class))
-                .switchIfEmpty(Mono.error(new InvalidCredentials(ConstanstsModel.USER_NO_FOUND)));
+                .switchIfEmpty(Mono.error(new CustomNoFoundException(ConstanstsModel.USER_NO_FOUND)));
     }
 }
