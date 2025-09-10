@@ -60,13 +60,14 @@ public class SecurityConfig {
                         "/v3/api-docs/**",
                         "/swagger-ui/**"/*,
                        "/api/v1/users/**",
-                                "/api/v1/apps"*/)
+                       "/api/v1/apps"*/)
                         .permitAll()
                         .pathMatchers(HttpMethod.POST,"/api/v1/users").hasAnyRole("ADMIN","ASESOR")
-                        .pathMatchers(HttpMethod.GET,"/api/v1/users").hasRole("ASESOR")
+                        .pathMatchers(HttpMethod.GET,"/api/v1/users").hasRole("ASESOR")                        
                         .pathMatchers(HttpMethod.POST,"/api/v1/apps").hasRole("CLIENTE")
+                        .pathMatchers(HttpMethod.GET,"/api/v1/apps").hasRole("ASESOR")
                         .anyExchange().authenticated())
-                .oauth2ResourceServer(oauth-> oauth
+                        .oauth2ResourceServer(oauth-> oauth
                         .jwt(jwt->jwt
                                 .jwtDecoder(decoder)
                                 .jwtAuthenticationConverter(jwtAuthConverter())))
