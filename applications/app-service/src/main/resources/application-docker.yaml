@@ -1,0 +1,77 @@
+postgres:
+  host: ${POSTGRES_HOST:postgres-db}
+  port: ${POSTGRES_PORT:5432}
+  database: ${POSTGRES_DATABASE:crediyahcc}
+  username: ${POSTGRES_USERNAME:hdj}
+  password: ${POSTGRES_PASSWORD:salsam2323}
+
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: never
+    include-exception: false
+
+logging:
+  level:
+    bootcamp.reto.poweup.exceptions: DEBUG
+    org.springframework.web.reactive: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.r2dbc.core: DEBUG
+  file:
+    name: /app/logs/crediya-authentication.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+spring:
+  application:
+    name: "crediya_authentication"
+  devtools:
+    restart:
+      enabled: false # Deshabilitado en Docker
+  r2dbc:
+    url: "r2dbc:postgresql://${POSTGRES_HOST:powerup_postgres}:${POSTGRES_PORT:5432}/${POSTGRES_DATABASE:crediyahcc}"
+    username: ${POSTGRES_USERNAME:hdj}
+    password: ${POSTGRES_PASSWORD:salsam2323}
+    pool:
+      enabled: true
+      initial-size: 10
+      max-size: 20
+      max-idle-time: 30m
+      validation-query: SELECT 1
+      max-acquire-time: 60s
+      max-create-connection-time: 60s
+  sql:
+    init:
+      mode: "always"
+      schema-locations: "classpath:schema.sql"
+      continue-on-error: false
+      separator: ";"
+  profiles:
+    active: docker
+
+jwt:
+  secret: "$mySecretKeyForJWT2024VeryLongAndSecureKey123456789"
+  expiration: 3600000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+cors:
+  allowed-origins: "http://localhost:4200,http://localhost:8080"
+
+debug: true
+
+springdoc:
+  swagger-ui:
+    operations-sorter: method
+    tags-sorter: alpha
+    doc-expansion: node

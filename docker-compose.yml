@@ -12,8 +12,36 @@ services:
     volumes:
       - /var/lib/postgresql/data  # datos persistentes
 
+    networks:
+      - crediya-network
+
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U hdj -d crediyahcc"]
       interval: 5s
       timeout: 3s
       retries: 20
+
+  auth_crediya:
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile
+    container_name: auth_container
+    environment:
+      - POSTGRES_HOST=powerup_postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DATABASE=crediyahcc
+      - POSTGRES_USERNAME=hdj
+      - POSTGRES_PASSWORD=salsam2323
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      powerup_postgres:
+        condition: service_healthy
+    networks:
+      - crediya-network
+    restart: unless-stopped
+
+networks:
+  crediya-network:
+    driver: bridge
