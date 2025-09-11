@@ -47,9 +47,7 @@ spring:
       mode: "always"
       schema-locations: "classpath:schema.sql"
       continue-on-error: false
-      separator: ";"
-  profiles:
-    active: docker
+      separator: ";" 
 
 jwt:
   secret: "$mySecretKeyForJWT2024VeryLongAndSecureKey123456789"
