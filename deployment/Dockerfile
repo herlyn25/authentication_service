@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Copiar el JAR de la aplicación
 COPY ../applications/app-service/build/libs/crediya_authentication.jar /app/crediya_authentication.jar
+COPY .env /app/.env
 
 # Exponer puerto
 EXPOSE 8080
