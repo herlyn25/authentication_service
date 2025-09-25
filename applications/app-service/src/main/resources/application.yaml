@@ -1,12 +1,12 @@
 postgres:
-  host: localhost
-  port: 5432
-  database: "crediyahcc"
-  username: "hdj"
-  password: "salsam2323"
+  host: ${POSTGRES_HOST:127.0.0.1}
+  port: ${POSTGRES_PORT}
+  database: "${POSTGRES_DB}"
+  username: "${POSTGRES_USER}"
+  password: "${POSTGRES_PASSWORD}"
 
 server:
-  port: 8080
+  port: ${PORT}
   error:
     include-message: always
     include-binding-errors: always
@@ -26,9 +26,9 @@ spring:
     restart:
       enabled: true
   r2dbc:
-    url: "r2dbc:postgresql://localhost:5432/crediyahcc"
-    username: "hdj"
-    password: "salsam2323"
+    url: "r2dbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
+    username: "${POSTGRES_USER}"
+    password: "${POSTGRES_PASSWORD}"
     pool:
       enabled: true
       initial-size: 10
@@ -39,14 +39,14 @@ spring:
       max-create-connection-time: 60s
   sql:
     init:
-      mode: "always"
-      schema-locations: "classpath:schema.sql"
-      continue-on-error: false
-      separator: ";"
+      mode: never
+      #schema-locations: "classpath:schema.sql"
+      #continue-on-error: false
+      #separator: ";"
 
 jwt:
-  secret: "$mySecretKeyForJWT2024VeryLongAndSecureKey123456789"
-  expiration: 3600000
+  secret: ${JWT_SECRET_KEY}
+  expiration: ${JWT_EXPIRATION_TIME}
 
 management:
   endpoints:

@@ -22,17 +22,22 @@ services:
       retries: 20
 
   auth_crediya:
+    env_file:
+      - .env
     build:
       context: .
       dockerfile: deployment/Dockerfile
     container_name: auth_container
     environment:
-      - POSTGRES_HOST=powerup_postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_DATABASE=crediyahcc
-      - POSTGRES_USERNAME=hdj
-      - POSTGRES_PASSWORD=salsam2323
       - SPRING_PROFILES_ACTIVE=docker
+      - POSTGRES_HOST=powerup_postgres
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_EXPIRATION_TIME=${JWT_EXPIRATION_TIME}
+
     ports:
       - "8080:8080"
     depends_on:

@@ -61,7 +61,7 @@ public class SecurityConfig {
                         "/swagger-ui/**")
                         .permitAll()
                         .pathMatchers(HttpMethod.POST,"/api/v1/users").hasAnyRole("ADMIN","ASESOR")
-                        .pathMatchers(HttpMethod.GET,"/api/v1/users").hasAnyRole("ASESOR","CLIENTE")
+                        .pathMatchers(HttpMethod.GET,"/api/v1/users/**").hasAnyRole("ASESOR","CLIENTE")
                         .anyExchange().authenticated())
                         .oauth2ResourceServer(oauth-> oauth
                         .jwt(jwt->jwt
